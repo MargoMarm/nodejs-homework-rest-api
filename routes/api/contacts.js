@@ -4,8 +4,6 @@ const ctrl = require("../../controllers/contacts");
 
 const {isValidId} = require("../../midllewares");
 
-const schemas = require("../../schemas/contacts");
-
 const router = express.Router();
 
 router.get("/", ctrl.getAll);
