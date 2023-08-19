@@ -34,29 +34,74 @@ const login = async (req, res) => {
   if (error) {
     throw HttpError(400, error.message);
   }
-	const { email, password } = req.body;
-	console.log(email)
-	const user = await User.findOne({ email });
-	console.log(user)
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
   if (!user) {
-    throw HttpError(401, "Email or password invalid");
+    throw HttpError(401, "Email or password is wrong");
   }
   const passwordCompare = await bcrypt.compare(password, user.password);
   if (!passwordCompare) {
-    throw HttpError(401, "Email or password invalid");
+    throw HttpError(401, "Email or password is wrong");
   }
   const payload = {
     id: user.id,
   };
-	console.log(payload)
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
+
+  await User.findByIdAndUpdate(user._id, { token });
 
   res.json({
     token,
+    user: {
+      email: user.email,
+      subscription: user.subscription,
+    },
   });
+};
+
+const getCurrent = async (req, res) => {
+  const { email, subscription } = req.user;
+
+  res.json({
+    email,
+    subscription,
+  });
+};
+
+const logout = async (req, res) => {
+  const { _id } = req.user;
+
+  await User.findByIdAndUpdate(_id, { token: "" });
+
+  res.status(204).json({
+    message: "Logout success",
+  });
+};
+
+const updateSubscription = async (req, res, next) => {
+  const { error } = schemas.updateSubscriptionSchema.validate(req.body);
+  if (error) {
+    throw HttpError(400, error.message);
+  }
+
+  const { _id } = req.user;
+  const { subscription } = req.body;
+
+  const result = await User.findByIdAndUpdate(
+    _id,
+    { subscription },
+    { new: true }
+  );
+  if (!result) {
+    throw HttpError(404, "Not Found");
+  }
+  res.status(200).json({ subscription });
 };
 
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
+  getCurrent: ctrlWrapper(getCurrent),
+  logout: ctrlWrapper(logout),
+  updateSubscription: ctrlWrapper(updateSubscription),
 };

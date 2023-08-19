@@ -2,8 +2,6 @@ const { Schema, model } = require("mongoose");
 
 const { handleMongooseError } = require("../helpers");
 
-const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-
 const usersSchema = new Schema({
 	
   password: {
@@ -12,7 +10,7 @@ const usersSchema = new Schema({
   },
   email: {
     type: String,
-    required: [true, 'Email is required'],
+	  required: [true, 'Email is required'],
     unique: true,
   },
   subscription: {
