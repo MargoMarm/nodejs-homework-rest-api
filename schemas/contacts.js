@@ -2,8 +2,8 @@ const Joi = require("joi");
 
 const addSchema = Joi.object({
   name: Joi.string().required(),
-	email: Joi.string().required(),
-	phone: Joi.string().required(),
+  email: Joi.string().required(),
+  phone: Joi.string().required(),
   favourite: Joi.boolean(),
 });
 const updateSchema = Joi.object({
@@ -17,6 +17,6 @@ const updateFavoriteSchema = Joi.object({
 
 module.exports = {
   addSchema,
-	updateSchema,
-  updateFavoriteSchema
+  updateSchema,
+  updateFavoriteSchema,
 };
