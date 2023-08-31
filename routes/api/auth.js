@@ -12,7 +12,11 @@ router.post("/login", ctrl.login)
 
 router.get("/current", authenticate, ctrl.getCurrent)
 
+router.get("/verify/:verificationToken", ctrl.verifyEmail);
+
 router.post("/logout", authenticate, ctrl.logout)
+
+router.post("/verify", ctrl.resendVerifyEmail)
 
 router.patch("/users", authenticate, ctrl.updateSubscription)
 
