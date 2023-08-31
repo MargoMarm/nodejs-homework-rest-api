@@ -14,10 +14,17 @@ const loginSchema = Joi.object({
 });
 
 const updateSubscriptionSchema = Joi.object({
-  subscription: Joi.string().valid(...options).required(),
+  subscription: Joi.string()
+    .valid(...options)
+    .required(),
+});
+
+const emailSchema = Joi.object({
+  email: Joi.string().pattern(emailRegexp).required(),
 });
 module.exports = {
   registerSchema,
-	loginSchema,
-  updateSubscriptionSchema
+  loginSchema,
+  updateSubscriptionSchema,
+  emailSchema,
 };
